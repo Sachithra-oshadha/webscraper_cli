@@ -145,3 +145,4 @@ Docker runs headless by default — no GUI required.
 - JavaScript-heavy websites are fully supported.
 
 ## License
+- CC0 1.0 Universal License
