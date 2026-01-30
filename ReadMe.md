@@ -30,8 +30,8 @@ Unlike basic scrapers, this tool supports JavaScript-rendered pages and simulate
 ### 1. Clone the repository
 
 ```bash
-git clone https://github.com/your-username/webscraper-cli.git
-cd webscraper-cli
+git clone https://github.com/Sachithra-oshadha/webscraper_cli.git
+cd webscraper_cli
 ```
 
 ### 2. Create a virtual environment

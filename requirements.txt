@@ -4,3 +4,4 @@ rich
 click
 lxml
 psycopg2-binary
+dotenv
