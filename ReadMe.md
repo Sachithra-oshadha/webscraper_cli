@@ -1,27 +1,57 @@
 # Web Scraper CLI
 
-An interactive command-line web scraper that uses a real headless browser to navigate websites, interact with elements, and extract HTML content using CSS selectors.
+An interactive command-line web scraper that uses a real browser engine to navigate websites, interact with elements, and persist scraped data into a PostgreSQL database.
 
-Unlike basic scrapers, this tool supports JavaScript-rendered pages and simulates real user interactions such as clicks and navigation.
+Unlike basic scrapers, this tool supports JavaScript-rendered pages, simulates real user interactions, and tracks changes over time across multiple websites and page visits.
 
 ---
 
 ## Features
 
+### Browser & CLI
+
 - Navigate to any website
 - Display page title and HTML source
-- Capture specific HTML sections using CSS selectors
+- Capture HTML sections using CSS selectors
 - Click elements programmatically
-- Maintain browser navigation history
-- Extensible command-based architecture
+- Maintain navigation history (back/forward)
+- Command-based, extensible CLI architecture
 - Headless browser automation using Playwright
 
+### Data Persistence (PostgreSQL)
+- Multi-website support
+- Page-level visit tracking with timestamps
+- Element-level scraping by HTML tag
+- Deduplication using content hashing
+- Store only changed elements per visit
+- Store both raw HTML and rendered text
+- JSONB storage for HTML attributes
+
+### Deployment
+- Python virtual environment support
+- Fully containerized with Docker
+- Headless-safe execution (CI / servers / Docker)
+
 ---
+## Architecture Overview
+```
+CLI → Playwright Browser → Navigator
+                     ↓
+                Database Logger
+                     ↓
+                PostgreSQL
+```
+Each page navigation:
+- Creates a new page visit
+- Extracts all HTML elements
+- Deduplicates content using SHA-256 hashes
+- Stores only new/changed elements
 
-## Prerequisites
+## Prerequisites (Local)
 
-- Python **3.10 or higher**
+- Python **3.13 or higher**
 - pip (Python package manager)
+- PostgreSQL (local or Docker)
 
 ---
 
@@ -93,12 +123,25 @@ Example Domain
 <h1>Example Domain</h1>
 >>> exit
 ```
-## Notes
 
-This project uses headless Chromium, so no browser window is displayed.
+## Running with Docker (Recommended)
+1. Build the Docker image
+docker build -t webscraper-cli .
 
-JavaScript-heavy websites are fully supported.
+2. Run with PostgreSQL
+docker run -it --rm \
+  -e DATABASE_URL=postgresql://user:password@host.docker.internal:5432/web_scraper \
+  -e HEADLESS=true \
+  webscraper-cli
 
-Always respect website terms of service when scraping.
+
+Docker runs headless by default — no GUI required.
+
+## Notes & Best Practices
+- Headful mode requires an X server (not supported in Docker)
+- Some websites block automation (403 Forbidden)
+- Respect website robots.txt and Terms of Service
+- Use proxies and realistic user agents when needed
+- JavaScript-heavy websites are fully supported.
 
 ## License
